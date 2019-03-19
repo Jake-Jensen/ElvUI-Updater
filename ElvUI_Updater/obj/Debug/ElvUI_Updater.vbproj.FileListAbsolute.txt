@@ -1,0 +1,14 @@
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.vbprojAssemblyReference.cache
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.Form1.resources
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.Resources.resources
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.vbproj.GenerateResource.cache
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.vbproj.CoreCompileInputs.cache
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\bin\Debug\ElvUI_Updater.exe.config
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\bin\Debug\ElvUI_Updater.exe
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\bin\Debug\ElvUI_Updater.pdb
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\bin\Debug\ElvUI_Updater.xml
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\bin\Debug\System.IO.Compression.dll
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.vbproj.CopyComplete
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.exe
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.xml
+C:\Users\Sapphire\source\repos\ElvUI_Updater\ElvUI_Updater\obj\Debug\ElvUI_Updater.pdb
