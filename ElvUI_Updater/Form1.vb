@@ -1,10 +1,11 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.IO.Compression
 
 Public Class Form1
 
     Public Class GV
         Public Shared DownloadVersion
+        Public Shared ExceptionData As String
     End Class
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -86,46 +87,50 @@ Public Class Form1
             ' Invoke the webpage download, to get the source, to get the latest version number.
 
             ReadWebpage()
+            If GV.ExceptionData = "DOES NOT END IN ZIP" Then
+                MsgBox("Critical error. Exception data: " + GV.ExceptionData + vbNewLine + "Stopping program execution.")
+                Exit Sub
+            End If
             ' If the version string is ever not xx.xx, this will fail. Find a better method in the future. 
             Me.BackColor = Color.Purple
-            Threading.Thread.Sleep(100) ' A small sleep to make sure the back color change isn't blocked.
+                Threading.Thread.Sleep(100) ' A small sleep to make sure the back color change isn't blocked.
             My.Computer.Network.DownloadFile("https://www.tukui.org" + GV.DownloadVersion, "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip") ' Begin the download, and save to our location.
             IsDownloading = True
 
-            ' This will continuously try to move the file (Rename), and if the file is downloading, it will be blocked, preventing IsDownloading from becoming false. 
-            While IsDownloading = True
+                ' This will continuously try to move the file (Rename), and if the file is downloading, it will be blocked, preventing IsDownloading from becoming false. 
+                While IsDownloading = True
+                    Try
+                        My.Computer.FileSystem.MoveFile("C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip", "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\ElvuiMOVE.zip")
+                        IsDownloading = False
+                    Catch ex As Exception
+
+                    End Try
+                End While
+
+                My.Computer.FileSystem.MoveFile("C:\Program Files (x86)\SplitSecond\ElvUI_Updater\ElvuiMOVE.zip", "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip") ' Move it back to the original name.
+
+                ' Delete the files from the addon dir
+                ' This really should be an if statement, but it was done in a hurry, and a try block does what's needed without fuss.
                 Try
-                    My.Computer.FileSystem.MoveFile("C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip", "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\ElvuiMOVE.zip")
-                    IsDownloading = False
+                    My.Computer.FileSystem.DeleteDirectory(My.Settings.Path + "ElvUI", FileIO.DeleteDirectoryOption.DeleteAllContents)
                 Catch ex As Exception
 
                 End Try
-            End While
 
-            My.Computer.FileSystem.MoveFile("C:\Program Files (x86)\SplitSecond\ElvUI_Updater\ElvuiMOVE.zip", "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip") ' Move it back to the original name.
+                Try
+                    My.Computer.FileSystem.DeleteDirectory(My.Settings.Path + "ElvUI_Config", FileIO.DeleteDirectoryOption.DeleteAllContents)
+                Catch ex As Exception
 
-            ' Delete the files from the addon dir
-            ' This really should be an if statement, but it was done in a hurry, and a try block does what's needed without fuss.
-            Try
-                My.Computer.FileSystem.DeleteDirectory(My.Settings.Path + "ElvUI", FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-            End Try
-
-            Try
-                My.Computer.FileSystem.DeleteDirectory(My.Settings.Path + "ElvUI_Config", FileIO.DeleteDirectoryOption.DeleteAllContents)
-            Catch ex As Exception
-
-            End Try
+                End Try
 
 
-            ' Extract the downloaded zip to the addons directory. 
-            Dim zipPath As String = "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip"
-            Dim extractPath As String = My.Settings.Path
-            ZipFile.ExtractToDirectory(zipPath, extractPath)
-            Me.BackColor = Color.Green
-        Else
-            MsgBox("Why are you trying to update without a path set? Set your path first.")
+                ' Extract the downloaded zip to the addons directory. 
+                Dim zipPath As String = "C:\Program Files (x86)\SplitSecond\ElvUI_Updater\Elvui.zip"
+                Dim extractPath As String = My.Settings.Path
+                ZipFile.ExtractToDirectory(zipPath, extractPath)
+                Me.BackColor = Color.Green
+            Else
+                MsgBox("Why are you trying to update without a path set? Set your path first.")
         End If
 
 
@@ -141,11 +146,18 @@ Public Class Form1
         Dim FindStart = (sourceString.IndexOf("/downloads/elvui-"))                                                                   ' Find the start of the version number information, to pass as a download link.
         FindStart = FindStart + 1                                                                                                     ' The first character it finds in the string is ("), so we need to skip over that.
         Dim DownloadHREF = Mid(sourceString, FindStart, 26)                                                                           ' Read the next 26 characters, which ends in .zip. This should be updated to read UNTIL it reads a ("), instead of assuming. 
-        GV.DownloadVersion = DownloadHREF                                                                                             ' Sets the download URL
+        Dim SubstringFinal = DownloadHREF.Substring(DownloadHREF.Length - 3)
+        If SubstringFinal = "zip" Then
+            GV.DownloadVersion = DownloadHREF
+            Console.WriteLine("Ended in .zip.")
+        Else
+            MsgBox("The URL parsed did not end in .zip. This usually indicates a problem with the server, or this program is out of date with ElvUI's download method.")
+            GV.ExceptionData = "DOES NOT END IN ZIP"
+        End If
+        ' Sets the download URL
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs)
-        ReadWebpage()   ' Debug. Not needed nor usable. 
-
+    Private Sub Button3_Click_1(sender As Object, e As EventArgs)
+        ReadWebpage()   ' Debug. Not needed nor usable.
     End Sub
 End Class
